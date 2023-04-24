@@ -14,7 +14,7 @@ const Userschema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    goal: {
+    goalType: {
         type: String,
         required: true
     },
@@ -22,6 +22,7 @@ const Userschema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    savedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
 })
 
 export const UserModel = mongoose.model("users", Userschema)

@@ -5,15 +5,20 @@ import { UserModel } from "../models/userSchema.js";
 const router = express.Router()
 
 router.post("/register", async (req, res) => {
-    const {name, username, password, goal} = req.body
-    const user = await UserModel.findOne({username: username})
-    if(user){
-        return res.json({message: "user already exists"})
+    try {
+        const { name, username, password, goalType } = req.body;
+        const user = await UserModel.findOne({ username: username });
+        if (user) {
+            return res.json({ message: "user already exists" });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new UserModel({ name, username, password: hashedPassword, goalType });
+        await newUser.save();
+        res.json({ message: "register success" });
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ message: error.message });
     }
-    const hashedPassword =  await bcrypt.hash(password, 10)
-    const newUser = new UserModel({name, username, password: hashedPassword, goal})
-    await newUser.save()
-    res.send("register success")
 
 })
 router.post("/login", async (req, res) => {
