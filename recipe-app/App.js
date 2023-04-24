@@ -8,21 +8,17 @@ import Register from './components/Register.js';
 import MainMenu from './components/MainMenu.js';
 import UserSettings from './components/UserSettings.js';
 import SignOut from './components/SignOut.js';
-import AddRecipe from './components/recipes/addRecipe.js';
-import EditRecipe from "./components/recipes/editRecipe.js"
-import CookTime from "./components/recipes/cookTime.js"
+import RecipeAdd from './components/recipes/RecipeAdd.js';
 
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
 function MainRecipeScreens() {
-  <Stack.Navigator>
-    <Stack.Screen name="AddRecipe" component={AddRecipe} />
-    <Stack.Screen name="EditRecipe" component={EditRecipe} />
-    <Stack.Screen name="CookTime" component={CookTime} />
+  return (<Stack.Navigator>
+    <Stack.Screen name="RecipeAdd" component={RecipeAdd} />
     <Stack.Screen name='Main Menu' component={MainDrawerNavigator} />
-  </Stack.Navigator>
+  </Stack.Navigator> )
 }
 
 function MainStackNavigator() {
@@ -42,9 +38,8 @@ function MainDrawerNavigator() {
       <Drawer.Screen name='Main Menu' component={MainMenu} />
       <Drawer.Screen name='User Settings' component={UserSettings} />
       <Drawer.Screen name="Sign Out" component={SignOut} />
-      <Drawer.Screen name="AddRecipe" component={MainRecipeScreens} />
-      <Drawer.Screen name="EditRecipe" component={MainRecipeScreens} />
-      <Drawer.Screen name="CookTime" component={MainRecipeScreens} />
+      <Drawer.Screen name="RecipeAdd" component={MainRecipeScreens} />
+
     </Drawer.Navigator>
   );
 }

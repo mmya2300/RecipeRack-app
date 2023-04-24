@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { Button, Text } from '@rneui/themed';
+import { TextInput } from 'react-native-gesture-handler';
+import axios from "axios"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default class AddRecipe extends Component {
+
+
+export default class RecipeAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
         ownerID: "",
         name: "",
-        ingredients: "",
-        directions: "",
+        ingredients: ["", ""],
+        directions: ["", ""],
         yield: "",
         cookTime: "",
         completionStatus: "",
@@ -89,5 +95,4 @@ export default class AddRecipe extends Component {
     );
   }
 }
-  }
-}
+  

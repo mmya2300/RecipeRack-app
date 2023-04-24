@@ -38,7 +38,7 @@ export default class MainMenu extends Component {
         <Button 
             title={"Add a recipe"}
             onPress={()=>{
-                this.props.navigation.navigate('AddRecipe')
+                this.props.navigation.navigate('RecipeAdd')
             }}
         />
       </View>
