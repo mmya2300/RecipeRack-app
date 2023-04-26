@@ -10,7 +10,7 @@ const router = express.Router()
 router.get("/main/:userID", async (req, res) => {
     try {
         const user = await UserModel.findById(req.params.userID)
-        const savedRecipes = await RecipesModel.find({
+        const savedRecipes = await RecipeModel.find({
             _id: { $in: user.savedRecipes },
           });
         res.status(201).json({ savedRecipes });
@@ -23,8 +23,11 @@ router.get("/main/:userID", async (req, res) => {
 // add a recipe and save it
 router.post("/", async (req, res) => {
     const user = await UserModel.findById(req.body.userID);
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
     const newRecipe = new RecipeModel({
-        ownerID: user._id,
+        ownerID: req.body.ownerID,
         name: req.body.name,
         description: req.body.description,
         ingredients: req.body.ingredients,
@@ -36,7 +39,7 @@ router.post("/", async (req, res) => {
     try {
       await newRecipe.save()
         try {
-                user.savedRecipes.push(newRecipe)
+                user.savedRecipes.push(newRecipe._id)
                 await user.save()
                 res.status(201).json({ savedRecipes: user.savedRecipes });
             } catch (error) {

@@ -13,12 +13,8 @@ export default class MainMenu extends Component {
         };
       }
     
-      componentDidMount() {
-        this.retrieveData();
-      }
-    
-      retrieveData = async () => {
-        try {
+      async componentDidMount() {
+       try {
           const value = await AsyncStorage.getItem('userID');
           if (value !== null) {
             this.setState({ userID: value });
@@ -26,7 +22,7 @@ export default class MainMenu extends Component {
         } catch (error) {
           console.log(error);
         }
-      };
+      }
 
   render() {
     return (

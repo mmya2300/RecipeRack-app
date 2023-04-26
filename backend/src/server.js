@@ -23,7 +23,7 @@ mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true } )
   });
 
 app.use("/auth", userRouter)
-app.use("/recipes", userRouter)
+app.use("/recipes", recipeRouter)
 
 app.listen(3000, () => {
   console.log('Server listening on port 3000');
