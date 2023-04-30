@@ -22,8 +22,13 @@ const RecipeSchema = new mongoose.Schema({
         type: Number, required: true
     },
     completionStatus: {
-        type: String
-    }
+        timeLeft: { type: String, required: true },
+        status: { type: String, required: true }
+      },
+    timesCompleted: [{
+        type: Date,
+        default: Date.now
+    }]
 
 })
 

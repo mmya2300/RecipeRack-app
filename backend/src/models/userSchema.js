@@ -22,7 +22,7 @@ const Userschema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    savedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
+    savedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "userRecipes" }],
 })
 
 export const UserModel = mongoose.model("users", Userschema)

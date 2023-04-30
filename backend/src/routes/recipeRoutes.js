@@ -10,6 +10,9 @@ const router = express.Router()
 router.get("/main/:userID", async (req, res) => {
     try {
         const user = await UserModel.findById(req.params.userID)
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
         const savedRecipes = await RecipeModel.find({
             _id: { $in: user.savedRecipes },
           });
@@ -52,7 +55,49 @@ router.post("/", async (req, res) => {
 
 // get a specfic recipe and all it's infomation
 router.get("/main/view/:recipeID", async (req, res) => {
+    try {
+      const { recipeID } = req.params;
+      if (!mongoose.Types.ObjectId.isValid(recipeID)) {
+        return res.status(404).json({ error: "Recipe not found" });
+      }
+      const result = await RecipeModel.findById(recipeID);
+      if (!result) {
+        return res.status(404).json({ error: "Recipe not found" });
+      }
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+  
 
-})
+// delete a recipe
+
+router.delete("/delete/:recipeID", async (req, res) => {
+  try {
+    const recipe = await RecipeModel.findById(req.params.recipeID);
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    const ownerId = new mongoose.Types.ObjectId(recipe.ownerID);
+    const user = await UserModel.findById(ownerId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    await RecipeModel.deleteOne(recipe._id);
+    user.savedRecipes = user.savedRecipes.filter(
+      (savedRecipe) => savedRecipe.toString() !== recipe._id.toString()
+    );
+    await user.save();
+    res.status(200).json({ message: "Recipe deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+// edit a recipe
+
+// cooktime updates
 
 export {router as recipeRouter}

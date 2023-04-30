@@ -9,6 +9,7 @@ import MainMenu from './components/MainMenu.js';
 import UserSettings from './components/UserSettings.js';
 import SignOut from './components/SignOut.js';
 import RecipeAdd from './components/recipes/RecipeAdd.js';
+import ViewRecipe from './components/recipes/ViewRecipe.js';
 
 
 const Drawer = createDrawerNavigator();
@@ -16,8 +17,9 @@ const Stack = createNativeStackNavigator();
 
 function MainRecipeScreens() {
   return (<Stack.Navigator>
-    <Stack.Screen name="RecipeAdd" component={RecipeAdd} />
+    <Stack.Screen name="RecipeAdd" component={RecipeAdd} />  
     <Stack.Screen name='Main Menu' component={MainDrawerNavigator} />
+    <Stack.Screen name='ViewRecipe' component={ViewRecipe} />
   </Stack.Navigator> )
 }
 
@@ -28,6 +30,8 @@ function MainStackNavigator() {
       <Stack.Screen name='Register' component={Register} />
       <Stack.Screen name='Main Menu' component={MainDrawerNavigator} />
       <Stack.Screen name='Sign Out' component={MainDrawerNavigator} />
+      <Stack.Screen name="RecipeAdd" component={MainRecipeScreens} />
+      <Stack.Screen name='ViewRecipe' component={MainRecipeScreens} />
     </Stack.Navigator>
   );
 }
@@ -38,8 +42,6 @@ function MainDrawerNavigator() {
       <Drawer.Screen name='Main Menu' component={MainMenu} />
       <Drawer.Screen name='User Settings' component={UserSettings} />
       <Drawer.Screen name="Sign Out" component={SignOut} />
-      <Drawer.Screen name="RecipeAdd" component={MainRecipeScreens} />
-
     </Drawer.Navigator>
   );
 }

@@ -31,16 +31,19 @@ export default class RecipeAdd extends Component {
         console.error("User ID is null");
         return;
       }
+
       const ownerID = new mongoose.Types.ObjectId(String(userID));
+      
       const recipeData = {
-        ownerID: ownerID, // replace with the correct ownerID
-        name: 'Test Recipe',
-        description: 'This is a test recipe',
-        ingredients: ['1 cup sugar', '1/2 cup butter', '2 eggs'],
-        directions: ['Preheat the oven to 350F', 'Mix the sugar and butter', 'Add eggs and mix well', 'Bake for 30 mins'],
-        yield: '8 servings',
-        cookTime: 30,
-        completionStatus: 'Complete'
+        userID: ownerID,
+        ownerID: ownerID,
+        name: this.state.name,
+        description: this.state.description,
+        ingredients: this.state.ingredients,
+        directions: this.state.directions,
+        yield: this.state.yield,
+        cookTime: this.state.cookTime,
+        completionStatus: 'Not Started'
     };
     
     axios.post('http://localhost:3000/recipes/', recipeData)
@@ -50,13 +53,12 @@ export default class RecipeAdd extends Component {
         .catch(error => {
             console.log(error);
         });
+    this.props.navigation.navigate('Main Menu');
     } catch (error) {
       console.error(error);
     }
+
   };
-
-
-
 
   handleIngredientChange = (text, index) => {
     const { ingredients } = this.state;
@@ -140,10 +142,6 @@ export default class RecipeAdd extends Component {
           placeholder="Cook time"
           onChangeText={(text) => this.setState({ cookTime: text })}
           keyboardType="numeric"
-        />
-        <TextInput
-          placeholder="Completion status"
-          onChangeText={(text) => this.setState({ completionStatus: text })}
         />
         <Button title="Submit" onPress={this.createNewRecipe} />
       </View>
