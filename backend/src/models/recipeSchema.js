@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// the schema for a recipe
 const RecipeSchema = new mongoose.Schema({
     ownerID: {
         type: mongoose.Schema.Types.ObjectId, ref: "users", required: true
@@ -20,16 +21,8 @@ const RecipeSchema = new mongoose.Schema({
     yield: {type: String, required: true},
     cookTime: {
         type: Number, required: true
-    },
-    completionStatus: {
-        timeLeft: { type: String, required: true },
-        status: { type: String, required: true }
-      },
-    timesCompleted: [{
-        type: Date,
-        default: Date.now
-    }]
-
+    }
 })
 
+// attach the recipe model to the userRecipes database
 export const RecipeModel = mongoose.model("userRecipes", RecipeSchema)

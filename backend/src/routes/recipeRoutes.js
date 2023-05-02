@@ -97,7 +97,24 @@ router.delete("/delete/:recipeID", async (req, res) => {
 });
 
 // edit a recipe
-
-// cooktime updates
+router.put("/:recipeID", async (req, res) => {
+  try {
+    const { recipeID } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(recipeID)) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    const updatedRecipe = await RecipeModel.findByIdAndUpdate(
+      recipeID,
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(updatedRecipe);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+// update completion status
 
 export {router as recipeRouter}

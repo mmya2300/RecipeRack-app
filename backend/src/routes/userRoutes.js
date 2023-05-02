@@ -4,6 +4,8 @@ import { UserModel } from "../models/userSchema.js";
 
 const router = express.Router()
 
+// adds a new user to the Users database
+// the password is hashed to protect the user's account
 router.post("/register", async (req, res) => {
     try {
         const { name, username, password, goalType } = req.body;
@@ -21,6 +23,7 @@ router.post("/register", async (req, res) => {
     }
 
 })
+// log in the user, password is compared to the hashed password to see if it's accurate
 router.post("/login", async (req, res) => {
     const {username, password} = req.body
     const user = await UserModel.findOne({username: username})

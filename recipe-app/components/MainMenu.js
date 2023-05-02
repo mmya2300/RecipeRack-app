@@ -11,7 +11,7 @@ export default class MainMenu extends Component {
     super(props);
     this.state = {
       userID: '',
-      userName: "",
+      name: "",
       userRecipes: [],
     };
   }
@@ -19,6 +19,11 @@ export default class MainMenu extends Component {
   async componentDidMount() {
    await this.getUserRecipes()
   }
+
+  async componentDidUpdate(){
+    await this.getUserRecipes()
+  }
+  
   getUserRecipes = async () => {
     try {
       // get the user objectId stored in the asyncStorage
@@ -40,7 +45,9 @@ export default class MainMenu extends Component {
     }
   }
   
+  // render a recipe that belongs to the User
   renderItem = ({ item }) => {
+    // depending on the recipe pressed, then that recipe's info will be able to be viewed in the next screen
     const navigateToRecipe = () => {
       this.props.navigation.navigate('ViewRecipe', { recipeID: item._id });
     };
@@ -60,9 +67,9 @@ export default class MainMenu extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View>
-          <Text> Welcome to RecipeRack! User ID: {this.state.userID} </Text>
+          <Text style={styles.welcomeText}> Welcome To RecipeRack!</Text>
         </View>
-        <View style={styles.listContainer}>
+        <View>
           <FlatList
             data={this.state.userRecipes}
             renderItem={this.renderItem}
@@ -71,6 +78,7 @@ export default class MainMenu extends Component {
         </View>
         <View>
           <Button
+          buttonStyle={styles.button}
             title={"Add a recipe"}
             onPress={() => {
               this.props.navigation.navigate('RecipeAdd');
@@ -85,19 +93,21 @@ export default class MainMenu extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    backgroundColor: "#220d3a"
   },
   listContainer: {
     flex: 1,
     marginTop: 20,
   },
   itemContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "white",
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginVertical: 8,
     marginHorizontal: 16,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -105,13 +115,41 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width: 400
   },
   itemTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "black"
   },
   itemDescription: {
     fontSize: 16,
+    color: "black"
   },
+  button: {
+    backgroundColor: "#553285",
+    borderRadius: 10,
+    width: 150,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  welcomeText: {
+    color: "#ffffff",
+    fontSize: 40,
+    fontWeight: "bold",
+    marginTop: 80,
+  }
 });
+
 

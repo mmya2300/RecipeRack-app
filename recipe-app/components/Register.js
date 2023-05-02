@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TextInput, Button } from 'react-native';
+import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { Button, Text } from '@rneui/themed';
+import { TextInput } from 'react-native-gesture-handler';
 import axios from "axios"
 import Select from 'react-select';
 
@@ -23,19 +25,15 @@ export default class Register extends Component {
       open: false,
     };
   }
-
+  // if any errors are present then the button is disabled
   disableMethod = () => {
     const {username, password, confirmpassword, name, goalType, email, usernameError, nameError, passwordError, confirmError, goalTypeError, emailError} = this.state
     const inputsEmpty = [username, password, confirmpassword, name, goalType, email].some(val => val === "")
     const trueErrors = [usernameError, nameError, passwordError, confirmError, goalTypeError, emailError].some(val => val === true)
 
-    return inputsEmpty || !trueErrors
+    return inputsEmpty || trueErrors
 }
-
-  handleButtonPress = () => {
-    console.log(this.state);
-  }
-
+  // saves a new user to the database
   onCreateAccount = async () => {
     const {name, username, password, goalType } = this.state
     console.log(name, username, password, goalType)
@@ -53,6 +51,11 @@ export default class Register extends Component {
   }
 
   render() {
+
+    const buttonStyle = this.disableMethod()
+    ? styles.disabledButton
+    : styles.button;
+
     const goalOptions = [
       { label: 'I want to discover new recipes and try new cooking techniques.', value: 'knowledge' },
       { label: 'I want to better organize my meals and shopping lists', value: 'organizational' },
@@ -61,7 +64,10 @@ export default class Register extends Component {
     ];
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <View>
+        <Text h1 style={styles.heading}>Create An Account</Text>
+        </View>
         <View>
           <TextInput
             style={styles.input}
@@ -77,7 +83,7 @@ export default class Register extends Component {
                 this.setState({nameError: false})
               }
                }} />
-            {this.state.nameError ? <Text>Error: Please enter your first name (i.e Admin)</Text> : null }
+            {this.state.nameError ? <Text style={styles.errorText} >Error: Please enter your first name (i.e Admin)</Text> : null }
         </View>
         <View>
           <TextInput
@@ -94,7 +100,7 @@ export default class Register extends Component {
                 this.setState({emailError: false})
               }
                }}   />
-            {this.state.emailError ? <Text>Error: Please enter a valid email address (i.e testemail@gmail.com)</Text> : null }
+            {this.state.emailError ? <Text style={styles.errorText}>Error: Please enter a valid email address (i.e testemail@gmail.com)</Text> : null }
         </View>
         <View>
           <TextInput
@@ -111,7 +117,7 @@ export default class Register extends Component {
                 this.setState({usernameError: false})
               }
                }} />
-        {this.state.usernameError ? <Text>Error: Please enter a valid username (i.e test)</Text> : null }    
+        {this.state.usernameError ? <Text style={styles.errorText}>Error: Please enter a valid username (i.e test)</Text> : null }    
         </View>
         <View>
           <TextInput
@@ -128,7 +134,7 @@ export default class Register extends Component {
                 this.setState({passwordError: false})
               }
                }} />
-        {this.state.passwordError ? <Text>Error: Please enter a valid password (i.e Test1@)</Text> : null }        
+        {this.state.passwordError ? <Text style={styles.errorText}>Error: Please enter a valid password (i.e Test1@)</Text> : null }        
         </View>
         <View>
           <TextInput
@@ -145,8 +151,7 @@ export default class Register extends Component {
                 }
                }}
                 />
-        {this.state.confirmError ? <Text>Error: Password doesn't not match previously set password</Text> : null } 
-
+        {this.state.confirmError ? <Text style={styles.errorText}>Error: Password doesn't not match previously set password</Text> : null } 
         </View>
         <View>
         <Select
@@ -154,31 +159,68 @@ export default class Register extends Component {
           onChange={(selectedOption) => {
             this.setState({ goalType: selectedOption.value });
           }}
+          styles={{
+            width: 200
+          }}
           isSearchable={false}
           menuPlacement="top"
           options={goalOptions}
           placeholder={"Select your goal type"}
         />
         </View>
-        <View style={styles.button}>
-          <Button title="Submit" onPress={this.onCreateAccount}  />
+        <View>
+          <Button title="Create Account"
+          buttonStyle={buttonStyle}
+          onPress={this.onCreateAccount}
+          disabled={this.disableMethod()} />
         </View>
       </SafeAreaView>
     );
   }
 }
 const styles = StyleSheet.create({
-    input: {
-        borderColor: "#919191",
-        height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
-        paddingLeft: 30,
-        paddingRight: 30,
-        borderRadius: 5
-    },
-    button: {
-      margin: 12
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heading: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#242F3E",
+    marginTop: 80,
+    marginBottom: 50,
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FFFFFF",
+    height: 50,
+    margin: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 10,
+    width: "110%",
+    fontSize: 18,
+    fontWeight: "bold",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+
+  button: {
+    backgroundColor: "#553285",
+    borderRadius: 10,
+    width: 150,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+
+});

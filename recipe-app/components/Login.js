@@ -13,7 +13,8 @@ export default class Login extends Component {
     this.state = {
         username: "",
         password: "",
-        loginError: false
+        loginError: false,
+        serverError: false
     };
   }
 
@@ -45,9 +46,9 @@ export default class Login extends Component {
         username,
         password,
       })
-
+      // if the username and password is incorrect
       if (result.data.message != "login success") {
-        console.log("no login", result.data)
+        this.setState({loginError: true})
         return;
       }
       
@@ -62,11 +63,16 @@ export default class Login extends Component {
       console.log(result, userID)
       this.props.navigation.navigate('Main Menu')
     } catch (error) {
+      // if the server is down and can't be accessed
+      this.setState({serverError: true})
       console.error(error);
     }
   }
 
   render() {
+    const buttonStyle = this.disableMethod()
+      ? styles.disabledButton
+      : styles.button;
     return (
       <SafeAreaView style={styles.container}>
         <View>
@@ -90,30 +96,20 @@ export default class Login extends Component {
             onChangeText={(text) => this.setState({password: text})}
           />
         </View>
-        <View>
           <Button 
             title={"Log in"}
-            buttonStyle={{
-              backgroundColor: 'rgba(111, 202, 186, 1)',
-              borderRadius: 5,
-            }}
-            titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
-            containerStyle={{
-              marginHorizontal: 50,
-              height: 50,
-              width: 200,
-              marginVertical: 10,
-            }}
+            buttonStyle={buttonStyle}
             onPress={this.onLogin}
             disabled={this.disableMethod()}
           />
-        </View>
+        {this.state.serverError ? <View style={styles.errorBox}> <Text style={styles.errorText}>UNABLE TO LOGIN: 500 Error</Text> </View> : null } 
+        {this.state.loginError ? <View style={styles.errorBox}> <Text style={styles.errorText}>UNABLE TO LOGIN: Incorrect Username or Password</Text> </View> : null } 
         <View style={styles.registerBox}>
-          <Text>
+          <Text style={styles.registerText}>
             No account?{' '}
           </Text>
           <Text
-            style={styles.link}
+            style={styles.registerLink}
             onPress={() => {
               this.onCreationClick()
             }}
@@ -126,35 +122,95 @@ export default class Login extends Component {
   }
 }
 
+
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    heading: {
-        fontSize: 25
-    },
-    input: {
-        borderColor: "#919191",
-        height: 40,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10,
-        paddingLeft: 30,
-        paddingRight: 30,
-        borderRadius: 5
-      },
-    registerBox: {
-        rowGap: 1,
-        alignItems: "center",
-        flexDirection: "row",
-        flexWrap: 'wrap',
-    },
-    link: {
-        color:"#78ACFF"
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heading: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#242F3E",
+    marginTop: 80,
+    marginBottom: 50,
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FFFFFF",
+    height: 50,
+    margin: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 10,
+    width: "90%",
+    fontSize: 18,
+    fontWeight: "bold",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  disabledButton: {
+    backgroundColor: "grey",
+    borderRadius: 10,
+    width: 150,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  button: {
+    backgroundColor: "#553285",
+    borderRadius: 10,
+    width: 150,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  registerBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  registerText: {
+    color: "#8B8B8B",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  registerLink: {
+    color: "#3B82F6",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginLeft: 5,
+    textDecorationLine: "underline",
+  },
+  errorBox: {
+    borderRadius: 10,
+    backgroundColor: "pink",
+    padding: 10,
+    marginTop: 20,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+});
+
+
   
 

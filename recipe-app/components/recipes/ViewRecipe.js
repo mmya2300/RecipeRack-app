@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View, StyleSheet } from 'react-native';
 import { Button, Text } from '@rneui/themed';
 import axios from 'axios';
 import mongoose from 'mongoose';
@@ -14,11 +14,6 @@ export default class ViewRecipe extends Component {
       directions: [],
       yield: "",
       cookTime: "",
-      completionStatus: {
-        timeLeft: "",
-        status: ""
-      },
-      timesCompleted: ""
     };
   }
   async componentDidMount(){
@@ -39,8 +34,6 @@ export default class ViewRecipe extends Component {
           directions: response.data.directions,
           yield: response.data.yield,
           cookTime: response.data.cookTime,
-          completionStatus: response.data.completionStatus,
-          timesCompleted: response.data.timesCompleted
         });
       })
       .catch(error => {
@@ -54,6 +47,7 @@ export default class ViewRecipe extends Component {
       this.getRecipeInfo()
     }
   }
+  // will delete the recipe
   deleteRecipe() {
     const { recipeID } = this.props.route.params;
     const objectID = new mongoose.Types.ObjectId(String(recipeID)); // convert string to object ID
@@ -70,28 +64,97 @@ export default class ViewRecipe extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>   
         <Button
             title={"Back to Menu"}
+            buttonStyle={styles.button}
             onPress={() => {
               this.props.navigation.navigate('Main Menu');
             }}
           />
-        <Text>{this.state.name}</Text>
+        <View style={styles.recipeContainer}>
+        <Text h2>{this.state.name}</Text>
         <Text>{this.state.description}</Text>
-        <Text>{this.state.ingredients.join(", ")}</Text>
-        <Text>{this.state.directions.join(", ")}</Text>
-        <Text>{this.state.yield}</Text>
-        <Text>{this.state.cookTime}</Text>
-        <Text>Time Left: {this.state.completionStatus.timeLeft}</Text>
-        <Text>Status: {this.state.completionStatus.status}</Text>
-        <Text>{this.state.timesCompleted}</Text>
+        <Text h4>Ingredients: </Text>
+        <Text>{this.state.ingredients.join("\n")}</Text>
+        <Text h4>Directions: </Text>
+        <Text>{this.state.directions.join("\n")}</Text>
+        <Text>Yield: {this.state.yield}</Text>
+        <Text>Cook Time: {this.state.cookTime}</Text>
+        </View>
         <Button
-          title={"Edit"} />
+          title={"Edit"} 
+          buttonStyle={styles.button}
+          onPress={() => {
+            this.props.navigation.navigate("EditRecipe", {recipeID: this.props.route.params.recipeID})
+          }} />
         <Button
-          title={"Delete"} onPress={() => this.deleteRecipe()} />
+          title={"Delete"} 
+          buttonStyle={styles.button}
+          onPress={() => this.deleteRecipe()} />
       </View>
     );
   }
 }
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#220d3a",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heading: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#242F3E",
+    marginTop: 80,
+    marginBottom: 50,
+  },
+  recipeContainer: {
+    textAlign: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#FFFFFF",
+    height: 50,
+    margin: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 10,
+    width: "110%",
+    fontSize: 18,
+    fontWeight: "bold",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  button: {
+    backgroundColor: "#553285",
+    borderRadius: 10,
+    width: 150,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+});
